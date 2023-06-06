@@ -1,2 +1,3 @@
-# otus_prof_homework
-Python Developer. Professional
+# Otus Homework Python Developer. Professional
+
+Посохов Александр
