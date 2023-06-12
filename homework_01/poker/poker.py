@@ -27,6 +27,12 @@
 # Можно свободно определять свои функции и т.п.
 # -----------------
 
+import itertools
+import collections
+
+RANKS = '23456789TJQKA'
+
+RANKS_DICT = dict(zip(RANKS, range(2, 15)))
 
 def hand_rank(hand):
     """Возвращает значение определяющее ранг 'руки'"""
@@ -54,40 +60,70 @@ def hand_rank(hand):
 def card_ranks(hand):
     """Возвращает список рангов (его числовой эквивалент),
     отсортированный от большего к меньшему"""
-    return
+    rank = [RANKS_DICT.get(el[0]) for el in hand]
+    ranks = sorted([i for i in rank if i is not None], reverse=True)
+    return ranks
 
 
 def flush(hand):
     """Возвращает True, если все карты одной масти"""
-    return
+    suit = set([el[1] for el in hand])
+    return len(suit) == 1
 
 
 def straight(ranks):
     """Возвращает True, если отсортированные ранги формируют последовательность 5ти,
     где у 5ти карт ранги идут по порядку (стрит)"""
-    return
+    ranks = set(ranks)
+    return len(ranks) == 5 and max(ranks) - min(ranks) == 4
 
 
 def kind(n, ranks):
     """Возвращает первый ранг, который n раз встречается в данной руке.
     Возвращает None, если ничего не найдено"""
-    return
+    counts = collections.Counter(ranks)
+    for i in counts.values():
+        if i > 1:
+            equal_n = [k for k in counts.keys() if counts[k] == n]
+            return equal_n
+    return None
 
 
 def two_pair(ranks):
     """Если есть две пары, то возврщает два соответствующих ранга,
     иначе возвращает None"""
-    return
+    par1 = kind(2, ranks)
+    par2 = kind(2, list(reversed(ranks)))
+    if par1 and par2 and par1 != par2:
+        return [par1, par2]
+    return None
 
 
 def best_hand(hand):
     """Из "руки" в 7 карт возвращает лучшую "руку" в 5 карт """
-    return
+    return max(itertools.combinations(hand, 5), key=hand_rank)
 
+# Вычисляем предварительно
+red_cards = [rank + suit for rank in '23456789TJQKA' for suit in 'HD']
+black_cards = [rank + suit for rank in '23456789TJQKA' for suit in 'CS']
 
 def best_wild_hand(hand):
     """best_hand но с джокерами"""
-    return
+    simple_cards = [card for card in hand if card not in ['?B', '?R']]
+    joker_cards = [card for card in hand if card in ['?B', '?R']]
+
+    hands = [simple_cards]
+    for joker_card in joker_cards:
+        if joker_card == '?R':
+            hands = [h + [c] for h in hands for c in red_cards if c not in simple_cards]
+        elif joker_card == '?B':
+            hands = [h + [c] for h in hands for c in black_cards if c not in simple_cards]
+
+    combinations = []
+    for hand in hands:
+        combinations.extend(list(itertools.combinations(hand, 5)))
+
+    return max(combinations, key=hand_rank)
 
 
 def test_best_hand():
