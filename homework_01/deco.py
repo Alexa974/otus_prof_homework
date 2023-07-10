@@ -4,48 +4,81 @@
 from functools import update_wrapper
 
 
-def disable():
-    '''
+def disable(f):
+    """
     Disable a decorator by re-assigning the decorator's name
     to this function. For example, to turn off memoization:
 
     >>> memo = disable
 
-    '''
-    return
+    """
+    return f
 
 
-def decorator():
-    '''
+def decorator(dec):
+    """
     Decorate a decorator so that it inherits the docstrings
     and stuff from the function it's decorating.
-    '''
-    return
+    """
+
+    def decorated(f):
+        res = dec(f)
+        return update_wrapper(res, f)
+
+    return decorated
 
 
-def countcalls():
-    '''Decorator that counts calls made to the function decorated.'''
-    return
+@decorator
+def countcalls(f):
+    """Decorator that counts calls made to the function decorated."""
+
+    def counted(*args):
+        counted.calls += 1
+        return f(*args)
+
+    counted.calls = 0
+    return counted
 
 
-def memo():
-    '''
+@decorator
+def memo(f):
+    """
     Memoize a function so that it caches all return values for
     faster future lookups.
-    '''
-    return
+    """
+    cache = {}
+
+    def memorized(*args):
+        res_key = tuple(args)
+        if res_key not in cache:
+            res = f(*args)
+            cache[res_key] = res
+            update_wrapper(memorized, f)
+            return res
+        else:
+            return cache[res_key]
+
+    return memorized
 
 
-def n_ary():
-    '''
+@decorator
+def n_ary(f):
+    """
     Given binary function f(x, y), return an n_ary function such
     that f(x, y, z) = f(x, f(y,z)), etc. Also allow f(x) = x.
-    '''
-    return
+    """
+
+    def complex_func(*args):
+        if len(args) == 1:
+            return args[0]
+        else:
+            return f(args[0], complex_func(*args[1:]))
+
+    return complex_func
 
 
-def trace():
-    '''Trace calls made to function decorated.
+def trace(fill):
+    """Trace calls made to function decorated.
 
     @trace("____")
     def fib(n):
@@ -63,14 +96,29 @@ def trace():
     ____ <-- fib(1) == 1
      <-- fib(3) == 3
 
-    '''
-    return
+    """
+
+    @decorator
+    def trace_decorator(f):
+        def traced(*args):
+            prefix = fill * traced.depth
+            arg_str = ", ".join(str(a) for a in args)
+            print("{} --> {}({})".format(prefix, f.__name__, arg_str))
+            traced.depth += 1
+            result = f(*args)
+            print("{} <-- {}({}) == {}".format(prefix, f.__name__, arg_str, result))
+            traced.depth -= 1
+            return result
+        traced.depth = 0
+        return traced
+    return trace_decorator
 
 
 @memo
 @countcalls
 @n_ary
 def foo(a, b):
+    """a+b"""
     return a + b
 
 
@@ -78,6 +126,7 @@ def foo(a, b):
 @memo
 @n_ary
 def bar(a, b):
+    """a*b"""
     return a * b
 
 
@@ -85,9 +134,8 @@ def bar(a, b):
 @trace("####")
 @memo
 def fib(n):
-    """Some doc"""
-    return 1 if n <= 1 else fib(n-1) + fib(n-2)
-
+    """fib"""
+    return 1 if n <= 1 else fib(n - 1) + fib(n - 2)
 
 def main():
     print(foo(4, 3))
