@@ -41,13 +41,19 @@ def get_last_log_file():
         return None
 
 
-def get_open_func(filename):
-    _, ext = os.path.splitext(filename)
-    if ext == '.gz':
-        return gzip.open
-    else:
-        return open
+# def get_open_func(filename):
+#     _, ext = os.path.splitext(filename)
+#     if ext == '.gz':
+#         return gzip.open
+#     else:
+#         return open
 
+def get_open_func(filename):
+    opener = gzip.open if filename.endswith('.gz') else open
+    log_file = opener(filename, "rt")
+    for line in log_file:
+        yield line
+    log_file.close()
 
 def get_url_rt(line):
     m = URL_RT.search(line.decode())
@@ -61,19 +67,20 @@ def parse_log(filename):
     total_count = 0
     total_time = 0
     open_func = get_open_func(filename)
-    with open_func(filename, mode='r') as log:
-        for line in log:
-            line = line.strip()
-            url, rt = get_url_rt(line)
-            total_count += 1
-            total_time += rt
-            if url not in urls:
-                urls[url] = [rt]
-            else:
-                urls[url].append(rt)
-    # print(urls)
+    # with open_func(filename, mode='r') as log:
+    # log = open_func(filename, mode='r')
+    # for line in log:
+    for line in open_func:
+        line = line.strip()
+        url, rt = get_url_rt(line)
+        total_count += 1
+        total_time += rt
+        if url not in urls:
+            urls[url] = [rt]
+        else:
+            urls[url].append(rt)
+        # print(urls)
     return total_count, total_time, urls
-
 
 def process_data(data):
     ndigits = config['DIGITS']
@@ -109,18 +116,24 @@ def bytes_to_string(obj):
 
 
 def save_to_html(filename, data):
-    with open(config['TEMPLATE'], mode='r') as template:
-        with open(filename, mode='w') as report:
-            for line in template:
-                if MARKER in line:
-                    report.write(line.replace(MARKER, json.dumps(data, default=bytes_to_string)))
-                else:
-                    report.write(line)
+    try:
+        with open(config['TEMPLATE'], mode='r') as template:
+            with open(filename, mode='w') as report:
+                for line in template:
+                    if MARKER in line:
+                        report.write(line.replace(MARKER, json.dumps(data, default=bytes_to_string)))
+                    else:
+                        report.write(line)
+    except IOError as ex:
+        print(ex)
 
 
 def save_to_json(filename, data):
-    with open(filename, mode='w') as report:
-        report.write(json.dumps(data))
+    try:
+        with open(filename, mode='w') as report:
+            report.write(json.dumps(data))
+    except IOError as ex:
+        print(ex)
 
 
 def median(values):
@@ -178,13 +191,18 @@ if __name__ == "__main__":
 
     report_filename = gen_report_name(last_log, parsed_args.report_format)
 
-    if not report_filename:
-        sys.stderr.write('Can not parse date from {0} filename.\n'.format(last_log))
+    # if  report_filename:
+    #     sys.stderr.write('Can not parse date from {0} filename.\n'.format(last_log))
+    #     sys.stderr.flush()
+    #     sys.exit(1)
+
+    if os.path.exists(report_filename):
+        sys.stderr.write('For log-file {0} exist report {1}.\n'.format(last_log, report_filename))
         sys.stderr.flush()
         sys.exit(1)
 
     main(last_log, report_filename, formatter_func)
 
-    # print(last_log)
+    # print(report_filename)
     # print(process_data)
     # print(parse_log('./log\\nginx-access-ui.log-20170630'))
