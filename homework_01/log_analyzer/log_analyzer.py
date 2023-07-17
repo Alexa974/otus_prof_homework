@@ -29,6 +29,7 @@ config = {
     "DIGITS": 3
 }
 
+
 def get_last_log_file():
     list_of_files = glob.glob(os.path.join(config['LOG_DIR'], '*'))
     list_of_logs_filtered = (el for el in list_of_files if LOG_DATE.search(el))
@@ -54,6 +55,7 @@ def get_open_func(filename):
     for line in log_file:
         yield line
     log_file.close()
+
 
 def get_url_rt(line):
     m = URL_RT.search(line)
@@ -81,6 +83,7 @@ def parse_log(filename):
             urls[url].append(rt)
         # print(urls)
     return total_count, total_time, urls
+
 
 def process_data(data):
     ndigits = config['DIGITS']
