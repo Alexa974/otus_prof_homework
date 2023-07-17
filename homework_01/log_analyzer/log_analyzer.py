@@ -14,7 +14,7 @@ import re
 import json
 import argparse
 import sys
-from datetime import date
+# from datetime import date
 
 
 LOG_DATE = re.compile(r'nginx-access-ui.log-(?P<full_date>(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2}))')
@@ -56,7 +56,7 @@ def get_open_func(filename):
     log_file.close()
 
 def get_url_rt(line):
-    m = URL_RT.search(line.decode())
+    m = URL_RT.search(line)
     if m:
         return m.group('url'), float(m.group('rt'))
     return None, 0
