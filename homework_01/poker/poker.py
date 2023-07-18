@@ -34,6 +34,7 @@ RANKS = '23456789TJQKA'
 
 RANKS_DICT = dict(zip(RANKS, range(2, 15)))
 
+
 def hand_rank(hand):
     """Возвращает значение определяющее ранг 'руки'"""
     ranks = card_ranks(hand)
@@ -103,9 +104,11 @@ def best_hand(hand):
     """Из "руки" в 7 карт возвращает лучшую "руку" в 5 карт """
     return max(itertools.combinations(hand, 5), key=hand_rank)
 
+
 # Вычисляем предварительно
 red_cards = [rank + suit for rank in '23456789TJQKA' for suit in 'HD']
 black_cards = [rank + suit for rank in '23456789TJQKA' for suit in 'CS']
+
 
 def best_wild_hand(hand):
     """best_hand но с джокерами"""
@@ -146,6 +149,7 @@ def test_best_wild_hand():
     assert (sorted(best_wild_hand("JD TC TH 7C 7D 7S 7H".split()))
             == ['7C', '7D', '7H', '7S', 'JD'])
     print('OK')
+
 
 if __name__ == '__main__':
     test_best_hand()

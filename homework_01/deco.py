@@ -137,6 +137,7 @@ def fib(n):
     """fib"""
     return 1 if n <= 1 else fib(n - 1) + fib(n - 2)
 
+
 def main():
     print(foo(4, 3))
     print(foo(4, 3, 2))
