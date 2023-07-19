@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from log_analyzer import log_analyzer
+import log_analyzer
 
 
 class LogAnalyzerTests(unittest.TestCase):
