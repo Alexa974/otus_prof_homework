@@ -1,0 +1,185 @@
+Index: homework_01/test_log_analyzer.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#!/usr/bin/env python\r\n# -*- coding: utf-8 -*-\r\n\r\nimport unittest\r\nimport log_analyzer\r\n\r\n\r\nclass LogAnalyzerTests(unittest.TestCase):\r\n\r\n    def test_parse_log(self):\r\n        line_1 = '1.196.116.32 -  - [29/Jun/2017:03:50:22 +0300]\\\r\n                  \"GET /api/v2/banner/25019354 HTTP/1.1\" 200 927 \"-\"\\\r\n                  \"Lynx/2.8.8dev.9 libwww-FM/2.14 SSL-MM/1.4.1 GNUTLS/2.10.5\"\\\r\n                  \"-\" \"1498697422-2190034393-4708-9752759\" \"dc7161be3\" 0.390'\r\n\r\n        self.assertEqual(log_analyzer.get_url_rt(line_1),\r\n                         ('/api/v2/banner/25019354', 0.390))\r\n\r\n    def test_median(self):\r\n        # медиана для четного количества\r\n        self.assertEqual(log_analyzer.median([1, 2, 3, 4, 5]), 3)\r\n        # медиана для нечетного количества\r\n        self.assertEqual(log_analyzer.median([1, 2, 4, 5]), 3)\r\n        # медиана для одного значения\r\n        self.assertEqual(log_analyzer.median([1]), 1)\r\n\r\n    def test_process_data(self):\r\n        log_list = [\r\n            1,\r\n            3,\r\n            ({\r\n                '/api/v2/banner/25019354': [0.390],\r\n\r\n            }),\r\n\r\n            ]\r\n        result = [\r\n            {\r\n                \"url\": '/api/v2/banner/25019354',\r\n                \"count\": 1,\r\n                \"count_perc\": 100.0,\r\n                \"time_avg\": 0.390,\r\n                \"time_max\": 0.390,\r\n                \"time_med\": 0.390,\r\n                \"time_perc\": 13.0,\r\n                \"time_sum\": 0.390,\r\n            }\r\n        ]\r\n\r\n        self.assertEqual(log_analyzer.process_data(log_list), result)\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    unittest.main()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/homework_01/test_log_analyzer.py b/homework_01/test_log_analyzer.py
+--- a/homework_01/test_log_analyzer.py	(revision d4ad5386fd772d24f42a586dc21ee0868e7e8d1b)
++++ b/homework_01/test_log_analyzer.py	(date 1689800098691)
+@@ -2,7 +2,7 @@
+ # -*- coding: utf-8 -*-
+ 
+ import unittest
+-import log_analyzer
++from log_analyzer import log_analyzer
+ 
+ 
+ class LogAnalyzerTests(unittest.TestCase):
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"b870aa21-8400-4ba6-b41d-e01f9b7c3957\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2QqIpo7mH0e14tQl8EeU8Fi4Ncs\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"last_opened_file_path\": \"D:/my/programing/Python/otus_professional/otus_prof_homework\",\r\n    \"settings.editor.selected.configurable\": \"reference.settingsdialog.IDE.editor.colors.Python\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\" selected=\"Python.test\">\r\n    <configuration name=\"poker\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"otus_prof_homework\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/homework_01/poker\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/homework_01/poker/poker.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"test\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"otus_prof_homework\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/homework_01/poker\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/homework_01/poker/test.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.test\" />\r\n        <item itemvalue=\"Python.poker\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"b870aa21-8400-4ba6-b41d-e01f9b7c3957\" name=\"Changes\" comment=\"\" />\r\n      <created>1686074869620</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1686074869620</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision d4ad5386fd772d24f42a586dc21ee0868e7e8d1b)
++++ b/.idea/workspace.xml	(date 1689873567709)
+@@ -6,6 +6,7 @@
+   <component name="ChangeListManager">
+     <list default="true" id="b870aa21-8400-4ba6-b41d-e01f9b7c3957" name="Changes" comment="">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/homework_01/test_log_analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/homework_01/test_log_analyzer.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -34,11 +35,42 @@
+   "keyToString": {
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "last_opened_file_path": "D:/my/programing/Python/otus_professional/otus_prof_homework",
+-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Python"
++    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+   }
+ }]]></component>
+-  <component name="RunManager" selected="Python.test">
+-    <configuration name="poker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
++  <component name="RecentsManager">
++    <key name="CopyFile.RECENT_KEYS">
++      <recent name="D:\my\programing\Python\otus_professional\otus_prof_homework\homework_01\log_analyzer\log" />
++    </key>
++    <key name="MoveFile.RECENT_KEYS">
++      <recent name="D:\my\programing\Python\otus_professional\otus_prof_homework\homework_01" />
++      <recent name="D:\my\programing\Python\otus_professional\otus_prof_homework\homework_01\test" />
++      <recent name="D:\my\programing\Python\otus_professional\otus_prof_homework\homework_01\log_analyzer" />
++    </key>
++  </component>
++  <component name="RunManager" selected="Python tests.Python tests in test_log_analyzer.py">
++    <configuration name="deco" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
++      <module name="otus_prof_homework" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <envs>
++        <env name="PYTHONUNBUFFERED" value="1" />
++      </envs>
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01" />
++      <option name="IS_MODULE_SDK" value="true" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/deco.py" />
++      <option name="PARAMETERS" value="" />
++      <option name="SHOW_COMMAND_LINE" value="false" />
++      <option name="EMULATE_TERMINAL" value="false" />
++      <option name="MODULE_MODE" value="false" />
++      <option name="REDIRECT_INPUT" value="false" />
++      <option name="INPUT_FILE" value="" />
++      <method v="2" />
++    </configuration>
++    <configuration name="log_analyzer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="otus_prof_homework" />
+       <option name="INTERPRETER_OPTIONS" value="" />
+       <option name="PARENT_ENVS" value="true" />
+@@ -46,11 +78,11 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01/poker" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01/log_analyzer" />
+       <option name="IS_MODULE_SDK" value="true" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+       <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/poker/poker.py" />
++      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/log_analyzer/log_analyzer.py" />
+       <option name="PARAMETERS" value="" />
+       <option name="SHOW_COMMAND_LINE" value="false" />
+       <option name="EMULATE_TERMINAL" value="false" />
+@@ -59,7 +91,7 @@
+       <option name="INPUT_FILE" value="" />
+       <method v="2" />
+     </configuration>
+-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
++    <configuration name="test1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="otus_prof_homework" />
+       <option name="INTERPRETER_OPTIONS" value="" />
+       <option name="PARENT_ENVS" value="true" />
+@@ -67,11 +99,11 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
+-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01/poker" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01" />
+       <option name="IS_MODULE_SDK" value="true" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+       <option name="ADD_SOURCE_ROOTS" value="true" />
+-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/poker/test.py" />
++      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/test1.py" />
+       <option name="PARAMETERS" value="" />
+       <option name="SHOW_COMMAND_LINE" value="false" />
+       <option name="EMULATE_TERMINAL" value="false" />
+@@ -80,10 +112,45 @@
+       <option name="INPUT_FILE" value="" />
+       <method v="2" />
+     </configuration>
++    <configuration name="Doctests in deco" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
++      <module name="otus_prof_homework" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01" />
++      <option name="IS_MODULE_SDK" value="true" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/homework_01/deco.py" />
++      <option name="CLASS_NAME" value="" />
++      <option name="METHOD_NAME" value="" />
++      <option name="FOLDER_NAME" value="" />
++      <option name="TEST_TYPE" value="TEST_SCRIPT" />
++      <option name="PATTERN" value="" />
++      <option name="USE_PATTERN" value="false" />
++      <method v="2" />
++    </configuration>
++    <configuration name="Python tests in test_log_analyzer.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
++      <module name="otus_prof_homework" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/homework_01/log_analyzer" />
++      <option name="IS_MODULE_SDK" value="true" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <option name="_new_additionalArguments" value="&quot;&quot;" />
++      <option name="_new_target" value="&quot;$PROJECT_DIR$/homework_01/test_log_analyzer.py&quot;" />
++      <option name="_new_targetType" value="&quot;PATH&quot;" />
++      <method v="2" />
++    </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="Python.test" />
+-        <item itemvalue="Python.poker" />
++        <item itemvalue="Python tests.Python tests in test_log_analyzer.py" />
++        <item itemvalue="Python.log_analyzer" />
++        <item itemvalue="Python.deco" />
++        <item itemvalue="Python tests.Doctests in deco" />
++        <item itemvalue="Python.test1" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -109,4 +176,15 @@
+       </map>
+     </option>
+   </component>
++  <component name="XDebuggerManager">
++    <breakpoint-manager>
++      <default-breakpoints>
++        <breakpoint type="python-exception">
++          <properties notifyOnTerminate="true" exception="BaseException">
++            <option name="notifyOnTerminate" value="true" />
++          </properties>
++        </breakpoint>
++      </default-breakpoints>
++    </breakpoint-manager>
++  </component>
+ </project>
+\ No newline at end of file
